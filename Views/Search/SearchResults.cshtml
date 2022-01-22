@@ -1,0 +1,36 @@
+﻿@model BookTrackerMain.Models.SearchResults
+
+@{
+    ViewData["Title"] = "View";
+}
+<style>
+    .search-result {
+        width: 100%;
+        margin: 10px 0px;
+    }
+</style>
+<h4>Found @Model.NumFound results</h4>
+<div class="row">
+@foreach(var searchResult in @Model.Docs) {
+    <div class="col-3 d-flex align-items-stretch">
+        <div class="card search-result" >
+                @if(searchResult.CoverId == 0)
+                {
+                    <img src="/images/notavailable.png" />
+                }
+                else {
+                    <img src="http://covers.openlibrary.org/b/id/@searchResult.CoverId-L.jpg" alt="book-image" />
+                }
+            <div class="card-body align-bottom">
+                <div class="card-title display-6">@searchResult.Title</div>
+                <div class="card-text">
+                    @foreach(var authorName in searchResult.AuthorNames ?? new List<string>()) {
+                        <span>@authorName</span>
+                    }
+                </div>
+                <a href="/book/@searchResult.Key.Replace("/works/", "")">See more...</a>
+            </div>
+        </div>
+    </div>
+}
+</div>

@@ -1,4 +1,4 @@
-﻿using BookTrackerMain.models;
+﻿using BookTrackerMain.Models;
 using Cassandra.Data.Linq;
 using Microsoft.Extensions.Configuration;
 

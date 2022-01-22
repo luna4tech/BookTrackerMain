@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookTrackerMain.models
+namespace BookTrackerMain.Models
 {
 	[Table("author_by_id")]
 	public class Author

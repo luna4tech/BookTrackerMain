@@ -8,9 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\notavailable.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CassandraCSharpDriver" Version="3.17.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\notavailable.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\notavailable.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
