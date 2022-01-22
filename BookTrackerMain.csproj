@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CassandraCSharpDriver" Version="3.17.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
   </ItemGroup>
 
 </Project>

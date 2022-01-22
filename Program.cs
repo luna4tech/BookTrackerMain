@@ -1,3 +1,4 @@
+using BookTrackerMain.repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 
@@ -5,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var configuration = builder.Configuration;
+
+builder.Services.AddSingleton<BookRepository>();
+builder.Services.AddSingleton<AuthorRepository>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>

@@ -1,0 +1,24 @@
+﻿@model BookTrackerMain.models.Book
+
+@{
+    ViewData["Title"] = "View";
+}
+<div class="card">
+    <div class="row">
+        <div class="col-4">
+            <img src="http://covers.openlibrary.org/b/id/@Model.CoverIds.First()-L.jpg" alt="book-image" />
+        </div>
+        <div class="col-8">
+            <div class="card-body">
+                <div class="card-title display-5">@Model.Name</div>
+                <div class="card-text display-6">
+                    @foreach(var authorName in Model.AuthorNames) {
+                        <a href="#">@authorName</a>
+                    }
+                </div>
+                <div class="card-text">@Model.Description</div>
+                <div class="card-text"><b>Published Date:</b> @Model.PublishedDate</div>
+            </div>
+        </div>
+    </div>
+</div>
