@@ -1,23 +1,87 @@
-﻿@model BookTrackerMain.Models.Book
-
+﻿@using System.Web
+@model Tuple<Book, UserBook>;
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Book detail";
+    //var Model.Item1 = ViewData["Model.Item1"] as Book;
+    //var Model.Item2 = ViewData["Model.Item2"] as UserBook;
 }
 <div class="card">
-    <div class="row">
-        <div class="col-4">
-            <img src="http://covers.openlibrary.org/b/id/@Model.CoverIds.First()-L.jpg" alt="book-image" />
-        </div>
-        <div class="col-8">
-            <div class="card-body">
-                <div class="card-title display-5">@Model.Name</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <img src="http://covers.openlibrary.org/b/id/@Model.Item1.CoverIds?.First()-L.jpg" style="width:100%" alt="book-image" />
+            </div>
+            <div class="col-xs-12 col-sm-8">
+                <div class="card-title display-5">@Model.Item1.Name</div>
                 <div class="card-text display-6">
-                    @foreach(var authorName in Model.AuthorNames) {
+                    @foreach(var authorName in Model.Item1.AuthorNames ?? new List<string>()) {
                         <a href="#">@authorName</a>
                     }
                 </div>
-                <div class="card-text">@Model.Description</div>
-                <div class="card-text"><b>Published Date:</b> @Model.PublishedDate</div>
+                <div class="card-text">@Model.Item1.Description</div>
+                <div class="card-text"><b>Published Date:</b> @Model.Item1.PublishedDate</div>
+
+                @if(Model.Item2 != null){
+                    <div class="mt-5">
+                        <form method="post" action="/book/userdetail/@Model.Item1.Id/@Model.Item2.UserId" >
+                            <div class="mb-2 row">
+                                @Html.LabelFor(model => model.Item2.Status, HttpUtility.HtmlDecode("Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"), new { @class = "col-auto col-form-label" })
+                                <div class="col-auto">
+                                    @Html.DropDownListFor(model => model.Item2.Status, new List<SelectListItem>
+                                    {
+                                        new SelectListItem{ Text="Read", Value = "read" },
+                                        new SelectListItem{ Text="Currently reading", Value = "currently_reading" },
+                                        new SelectListItem{ Text="Want to read", Value = "want_to_read" },
+                                    }, "Select an option", new { @class = "form-select"})
+                                 </div>
+                            </div>
+
+                            <div class="mb-2 row">
+                                @Html.LabelFor(model => model.Item2.StartDate, HttpUtility.HtmlDecode("Start date&nbsp;&nbsp;"), new { @class = "col-auto col-form-label" })
+                                <div class="col-auto">
+                                    @Html.TextBoxFor(model => model.Item2.StartDate, new { @type="date", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="mb-2 row">
+                                @Html.LabelFor(model => model.Item2.EndDate, "Finish date", new { @class = "col-auto col-form-label" })
+                                <div class="col-auto">
+                                    @Html.TextBoxFor(model => model.Item2.EndDate, new { @type="date", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="mb-2 row">
+                                @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("Rating&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"), new { @class = "col-auto col-form-label" })
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        @Html.RadioButtonFor(model => model.Item2.Rating, 1, new { @class = "form-check-input", @checked =  (Model.Item2.Rating == 1) })
+                                        @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("&#9733;"), new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check">
+                                        @Html.RadioButtonFor(model => model.Item2.Rating, 2, new { @class = "form-check-input", @checked =  (Model.Item2.Rating == 2) })
+                                        @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("&#9733; &#9733;"), new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check">
+                                        @Html.RadioButtonFor(model => model.Item2.Rating, 3, new { @class = "form-check-input", @checked =  (Model.Item2.Rating == 3) })
+                                        @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("&#9733; &#9733; &#9733;"), new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check">
+                                        @Html.RadioButtonFor(model => model.Item2.Rating, 4, new { @class = "form-check-input", @checked =  (Model.Item2.Rating == 4) })
+                                        @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("&#9733; &#9733; &#9733; &#9733;"), new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check">
+                                        @Html.RadioButtonFor(model => model.Item2.Rating, 5, new { @class = "form-check-input", @checked =  (Model.Item2.Rating == 5) })
+                                        @Html.LabelFor(model => model.Item2.Rating, HttpUtility.HtmlDecode("&#9733; &#9733; &#9733; &#9733; &#9733;"), new { @class = "form-check-label" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <button class="btn btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                }
             </div>
         </div>
     </div>

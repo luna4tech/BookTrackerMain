@@ -1,7 +1,5 @@
-﻿using Cassandra;
-using Cassandra.Data.Linq;
+﻿using Cassandra.Data.Linq;
 using Cassandra.Mapping;
-using Microsoft.Extensions.Configuration;
 
 namespace BookTrackerMain.repository
 {
@@ -11,14 +9,10 @@ namespace BookTrackerMain.repository
 		protected IMapper Mapper { get; }
 		protected Table<T> Table { get; }
 		protected string PrimaryKeyName { get; }
-		public CassandraRepository(IConfiguration config, string primaryKeyName)
+		protected string? ClusteringKeyName { get; }
+		public CassandraRepository(Cassandra.ISession session, string primaryKeyName, string? clusteringKeyName = null)
 		{
-
-			Session = Cluster.Builder()
-						.WithCloudSecureConnectionBundle(@"Resources\secure-connect-betterreads.zip")
-						.WithCredentials(config.GetValue<string>("clientId"), config.GetValue<string>("clientSecret"))
-						.Build()
-						.Connect("main");
+			Session = session;
 
 			Mapper = new Mapper(Session);
 
@@ -26,29 +20,22 @@ namespace BookTrackerMain.repository
 			Table.CreateIfNotExists();
 
 			PrimaryKeyName = primaryKeyName;
+			ClusteringKeyName = clusteringKeyName;
 		}
 
 		public async Task InsertAsync<T>(T row)
 		{
 			await Mapper.InsertAsync<T>(row);
 		}
-		public T? Get(string key)
+
+		public async Task<T?> GetAsync(string id, string? clustering_id = null)
 		{
 			try
 			{
-				return Mapper.Single<T>($"select * from {Table.Name} where {PrimaryKeyName}='{key}'");
-			} 
-			catch(Exception e)
-			{
-				Console.WriteLine(e.Message);
-				return default(T);
-			}
-		}
-		public async Task<T?> GetAsync(string id)
-		{
-			try
-			{
-				return await Mapper.SingleAsync<T>($"select * from {Table.Name} where {PrimaryKeyName}='{id}'");
+
+				var query = $"select * from {Table.Name} where {PrimaryKeyName}='{id}'";
+				var clusteringQuery = ClusteringKeyName != null ? $" and {ClusteringKeyName}='{clustering_id}'" : "";
+				return await Mapper.SingleAsync<T>(query + clusteringQuery);
 			}
 			catch (Exception e)
 			{

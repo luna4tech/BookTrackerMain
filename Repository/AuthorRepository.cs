@@ -6,7 +6,7 @@ namespace BookTrackerMain.repository
 {
 	public class AuthorRepository : CassandraRepository<Author>
 	{
-		public AuthorRepository(IConfiguration config) : base(config, "author_id")
+		public AuthorRepository(Cassandra.ISession session) : base(session, "author_id")
 		{
 
 		}
