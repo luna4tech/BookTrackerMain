@@ -14,11 +14,13 @@ namespace BookTrackerMain.Controllers
 	{
 		private BookRepository bookRepository;
 		private UserBookRepository userBookRepository;
+		private UserBookDetailRepository userBookDetailRepository;
 
-		public BookController(BookRepository bookRepository, UserBookRepository userBookRepository)
+		public BookController(BookRepository bookRepository, UserBookRepository userBookRepository, UserBookDetailRepository userBookDetailRepository)
 		{
 			this.bookRepository = bookRepository;
 			this.userBookRepository = userBookRepository;
+			this.userBookDetailRepository = userBookDetailRepository;
 		}
 		[HttpGet]
 		[Route("{bookId}")]
@@ -69,7 +71,23 @@ namespace BookTrackerMain.Controllers
 			{
 				userBook.Status = Request.Form["Item2.Status"];
 			}
+
+			var book = await bookRepository.GetAsync(bookId);
+			var userBookDetail = new UserBookDetail
+			{
+				UserId = userBook.UserId,
+				BookId = userBook.BookId,
+				Status = userBook.Status,
+				StartDate = userBook.StartDate,
+				EndDate = userBook.EndDate,
+				Rating = userBook.Rating,
+				Title = book!.Name,
+				AuthorNames = book.AuthorNames,
+				CoverId = book.CoverIds.FirstOrDefault(),
+				LastModified = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+			};
 			await userBookRepository.InsertAsync(userBook);
+			await userBookDetailRepository.InsertAsync(userBookDetail);
 			return LocalRedirect($"/book/{userBook.BookId}");
 		}
 

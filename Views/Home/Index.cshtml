@@ -1,8 +1,76 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<UserBookDetail>;
+@{
+    bool userAuthenticated = ViewBag.userAuthenticated;
+    ViewData["Title"] = userAuthenticated ? "My books" : "Home Page";
+
+    string StatusText(string statusValue)
+    {
+        switch (statusValue)
+        {
+            case "read":
+                return "Read";
+            case "currently_reading":
+                return "Currently reading";
+            case "want_to_read":
+                return "Want to read";
+            default:
+                return "";
+        }
+    }
+}
+<style>
+    .book-result {
+        min-height: 75px;
+    }
+</style>
+
+@if(userAuthenticated)
+{
+    @if(Model == null || Model.Count()==0)
+    {
+        <div class="text-center">
+            <h1 class="display-4">Welcome to book tracker</h1>
+            <p>Search for books. Start reading.</p>
+        </div>
+    }
+    else {
+        @foreach(var row in @Model) {
+            <div class="card book-result" >
+                <div class="row">
+                   <div class="col-xs-4 col-lg-2">
+                        @if(row.CoverId == null)
+                        {
+                            <img src="/images/notavailable.png" />
+                        }
+                        else {
+                            <img src="http://covers.openlibrary.org/b/id/@row.CoverId-M.jpg" alt="book-image" />
+                        }
+                    </div>
+                
+                    <div class="col-xs-8 col-lg-10">
+                        <div class="card-body">
+                            <h4 class="card-title display-6">@row.Title</h4>
+                            <h6 class="card-subtitle text-muted mb-2">
+                                @foreach(var authorName in row.AuthorNames ?? new List<string>()) {
+                                    <span>@authorName</span>
+                                }
+                            </h6>
+                            <div class="card-text text-muted mb-3">
+                                @StatusText(row.Status)
+                            </div>
+                            <a class="card-link" href="/book/@row.BookId">See more...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+else {
+    <div class="text-center">
+        <h1 class="display-4">Welcome to book tracker</h1>
+        <p>Search for books. Login to track your reading list.</p>
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to book tracker</h1>
-    <p>Search for books. Login to track your reading list.</p>
-</div>
+

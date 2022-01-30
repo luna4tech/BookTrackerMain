@@ -32,7 +32,6 @@ namespace BookTrackerMain.repository
 		{
 			try
 			{
-
 				var query = $"select * from {Table.Name} where {PrimaryKeyName}='{id}'";
 				var clusteringQuery = ClusteringKeyName != null ? $" and {ClusteringKeyName}='{clustering_id}'" : "";
 				return await Mapper.SingleAsync<T>(query + clusteringQuery);
@@ -41,6 +40,22 @@ namespace BookTrackerMain.repository
 			{
 				Console.WriteLine(e.Message);
 				return default(T);
+			}
+		}
+
+		public async Task<IPage<T>> GetMultipleAsync(string id, byte[] pagingState)
+		{
+			try
+			{
+
+				var query = $"select * from {Table.Name} where {PrimaryKeyName}='{id}'";
+				var result = await Mapper.FetchPageAsync<T>(5, pagingState, query, null);
+				return result;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return null;
 			}
 		}
 	}

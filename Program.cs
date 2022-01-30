@@ -18,6 +18,7 @@ builder.Services.AddSingleton<Cassandra.ISession>(
 builder.Services.AddSingleton<BookRepository>();
 builder.Services.AddSingleton<AuthorRepository>();
 builder.Services.AddSingleton<UserBookRepository>();
+builder.Services.AddSingleton<UserBookDetailRepository>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>

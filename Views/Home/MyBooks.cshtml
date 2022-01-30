@@ -1,0 +1,8 @@
+﻿@model IEnumerable<UserBook>;
+@{
+    ViewData["Title"] = "My books";
+}
+@foreach(UserBook row in @Model) {
+    <div>@row.BookId</div>
+    <div>@row.Status</div>
+}
